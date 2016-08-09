@@ -1,6 +1,8 @@
 easy-sketch.js
 ===================
 
+Go check out the [main repository !](https://github.com/brian978/easy-sketch.js), not maintained but, still...
+
 easy-sketch.js allows you to draw on canvas without having to dig into the HTML 5 API. It's very easy to use,
 very flexible, very small (13KB compressed) and can be extended with ease if needed.
 
@@ -11,7 +13,6 @@ Dependencies
 -------------------
 - HTML 5
 - jQuery
-- RequireJS
 
 
 Usage
@@ -19,7 +20,8 @@ Usage
 
 To create the class all you need to do is
 
-    var sketcher = new EasySketch.Sketch("#drawing-canvas", options);
+    var EasySketch = require('./your/module/path/EasySketch');
+    var sketcher   = new EasySketch("#drawing-canvas", options);
 
 
 - the first parameter can be either a selector (class selector is not supported), element ID, jQuery object, JS object;
@@ -59,10 +61,6 @@ or with the default changed
 
     sketcher.getOption("some option", "value to return if option is not found");
 
-**Note:** If you want to draw lines with opacity, then I recommend you activate the **doubleBuffering** option which adds
-an extra layer that is used to buffer the line until you release the mouse click:
-
-    sketcher.setOptions({doubleBuffering: true});
 
 ### Drawing without user input
 
@@ -120,10 +118,6 @@ To clear the canvas all you need to do is call the *clear()* method:
 
     sketcher.clear();
 
-You can also clear the overlay **manually** when double buffering is enabled:
-
-    sketcher.clearOverlay();
-
 
 ## Addons
 
@@ -139,9 +133,8 @@ points that were drawn on the canvas and moves them around in different stacks w
 
 To create the objects you need to do the following (after you import the classes using the RequireJS syntax of course):
 
-    var urDataStore = new UndoRedoDataStore(sketcher);
-    var undo = new UndoAddon(urDataStore);
-    var redo = new RedoAddon(urDataStore);
+    var undo = require('./your/module/path/Addons/Undo');
+    var redo = require('./your/module/path/Addons/Redo');
 
     sketcher.registerAddon(undo);
     sketcher.registerAddon(redo);
