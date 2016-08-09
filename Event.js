@@ -6,7 +6,6 @@
  * @license https://github.com/brian978/easy-sketch.js/blob/master/LICENSE New BSD License
  */
 
-define(["./EasySketch"], function (EasySketch) {
 
     /**
      *
@@ -105,6 +104,3 @@ define(["./EasySketch"], function (EasySketch) {
             return this._propagationStopped;
         }
     };
-
-    return EasySketch.Event;
-});
