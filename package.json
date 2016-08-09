@@ -1,5 +1,5 @@
 {
-  "name": "EasySketch",
+  "name": "easy-sketch",
   "version": "1.0.0",
   "description": "A simple class that facilitates free drawing on the HTML 5 canvas.",
   "main": "index.js",
