@@ -1,0 +1,22 @@
+{
+  "name": "EasySketch",
+  "version": "1.0.0",
+  "description": "A simple class that facilitates free drawing on the HTML 5 canvas.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kalmani/easy-sketch.js.git"
+  },
+  "dependencies": {
+    "uclass": "^2.1.0"
+  },
+  "author": "Kolosowski Florent",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kalmani/easy-sketch.js/issues"
+  },
+  "homepage": "https://github.com/Kalmani/easy-sketch.js"
+}
