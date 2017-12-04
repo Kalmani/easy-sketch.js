@@ -148,7 +148,7 @@ var Sketch = new Class({
     var $this = this;
     var scale = this.getScale(this.selectCanvas());
 
-    if (e.hasOwnProperty("originalEvent") && e.originalEvent.hasOwnProperty("changedTouches") && e.originalEvent.changedTouches.length > 0) {
+    if (e.originalEvent && e.originalEvent.changedTouches && e.originalEvent.changedTouches.length > 0) {
       e.pageX = e.originalEvent.changedTouches[0].pageX;
       e.pageY = e.originalEvent.changedTouches[0].pageY;
     }
