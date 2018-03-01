@@ -1,36 +1,32 @@
 "use strict";
 
-var Class = require('uclass');
+class Redo {
 
-var Redo = new Class({
-
-  initialize : function(main) {
-    this.sketch = main.sketch;
+  constructor(main) {
+    this.sketch    = main.sketch;
     this.DataStore = main.DataStore;
-  },
+  }
 
-  linkMethod : function() {
-    var self = this;
-    this.sketch.redo = function() {
+  linkMethod() {
+    this.sketch.redo = () => {
       // Moves the last line in the "undo" queue
-      var line = self.DataStore.redo();
+      var line = this.DataStore.redo();
 
       if (line.length == 0)
         return;
 
       // Storing the drawing options so we can restore them after the redraw
-      var options = self.sketch.getDrawingOptions();
+      var options = this.sketch.getDrawingOptions();
 
       // Redrawing the lines
-      self.sketch.setOptions(line.options);
-      self.sketch.drawLine(line.points, true);
+      this.sketch.setOptions(line.options);
+      this.sketch.drawLine(line.points, true);
 
       // Restore
-      self.sketch.setOptions(options);
+      this.sketch.setOptions(options);
     };
-
   }
 
-});
+}
 
 module.exports = Redo;

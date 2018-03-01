@@ -1,24 +1,20 @@
 "use strict";
 
-var Class     = require('uclass');
-var DataStore = require('./DataStore');
+const DataStore = require('./DataStore');
 
-var Addons = new Class({
+class Addons {
 
-  _list     : [],
-  sketch    : null,
-  dataStore : null,
-
-  initialize : function(sketch) {
-    this.sketch = sketch;
+  constructor(sketch) {
+    this._list     = [];
+    this.sketch    = sketch;
     this.DataStore = new DataStore(this);
-  },
+  }
 
-  register : function(Addon) {
+  register(Addon) {
     var addon = new Addon(this);
     addon.linkMethod();
   }
 
-});
+}
 
 module.exports = Addons;

@@ -1,64 +1,57 @@
 "use strict";
 
-var Class = require('uclass');
+const Events = require('events').EventEmitter;
+const Addons = require('./Addons');
 
-var Events    = require('uclass/events');
-var Utils     = require('./Utils');
-var Addons    = require('./Addons');
+class Sketch extends Events {
 
-var Sketch = new Class({
+  constructor() {
+    super();
 
-  Implements : [
-    Events,
-    Utils
-  ],
+    Object.assign(
+      this,
+      require('./Utils')
+    );
 
-  Binds : [
-    '_autoAdjustOverlay'
-  ],
+    this._autoAdjustOverlay = this._autoAdjustOverlay.bind(this);
+  }
 
-  _initAddons : function() {
+  _initAddons() {
     this.addons = new Addons(this);
-  },
+  }
 
-  selectContext : function () {
+  selectContext() {
     if (this.options.doubleBuffering === true && this.eraser === false)
       return this.overlayContext;
 
     return this.context;
-  },
+  }
 
-  selectCanvas : function () {
+  selectCanvas() {
     if (this.options.doubleBuffering === true)
       return this.overlay;
 
     return this.canvas;
-  },
+  }
 
-  /**
-   * Returns the value of an option if it exists and null (if this isn't changed) if it doesn't
-   */
-  getOption : function (name, defaultValue) {
+  getOption(name, defaultValue) {
     defaultValue = defaultValue || null;
 
     if (this.options.hasOwnProperty(name))
       return this.options[name];
 
     return defaultValue;
-  },
+  }
 
-  /**
-   * Returns the relevant options required to create a line
-   */
-  getDrawingOptions : function() {
+  getDrawingOptions() {
     return {
       color : this.options.color,
       width : this.options.width,
       alpha : this.options.alpha
     };
-  },
+  }
 
-  _createCanvas : function (element) {
+  _createCanvas(element) {
     var canvas;
     var elementType = typeof element;
 
@@ -81,9 +74,9 @@ var Sketch = new Class({
     }
 
     this.canvas = canvas;
-  },
+  }
 
-  attachListeners : function (force) {
+  attachListeners(force) {
     if (this.binded === true && !force)
       return this;
 
@@ -117,12 +110,9 @@ var Sketch = new Class({
         break;
     }
     return this;
-  },
+  }
 
-  /**
-   * Listeners can also be detached if this is required
-   */
-  detachListeners : function () {
+  detachListeners() {
     if (this.binded === false)
       return this;
 
@@ -142,9 +132,9 @@ var Sketch = new Class({
     bindingObject.off('mouseup mouseleave mouseout touchend touchcancel', this.listeners.stop);
 
     return this;
-  },
+  }
 
-  getPointerPosition : function (e) {
+  getPointerPosition(e) {
     var $this = this;
     var scale = this.getScale(this.selectCanvas());
 
@@ -156,16 +146,16 @@ var Sketch = new Class({
     return {
       x : Math.ceil((e.pageX - $this.canvas.offset().left) / scale.x),
       y : Math.ceil((e.pageY - $this.canvas.offset().top) / scale.y)
-    }
-  },
+    };
+  }
 
-  enableEraser : function (value) {
+  enableEraser(value) {
     this.eraser = value;
 
     return this;
-  },
+  }
 
-  contextSetup : function (context) {
+  contextSetup(context) {
     context = context || this.selectContext();
 
     // Saving first to avoid changing other stuff
@@ -179,16 +169,16 @@ var Sketch = new Class({
     context.lineJoin = "round";
 
     return this;
-  },
+  }
 
-  contextRestore : function (context) {
+  contextRestore(context) {
     context = context || this.selectContext();
     context.restore();
 
     return this;
-  },
+  }
 
-  startDrawing : function (e) {
+  startDrawing(e) {
     if (this.drawing === true || this.disabled === true)
       return this;
 
@@ -208,12 +198,12 @@ var Sketch = new Class({
     if (this.options.doubleBuffering === true && this.eraser === false)
       this.points.push(mouse);
 
-    this.fireEvent(this.NOTIFY_START_EVENT, [mouse]);
+    this.emit(this.NOTIFY_START_EVENT, [mouse]);
 
     return this;
-  },
+  }
 
-  startDrawingLine : function(e) {
+  startDrawingLine(e) {
     // To be able to handle touch events
     e.preventDefault();
 
@@ -224,27 +214,26 @@ var Sketch = new Class({
       id    : 'pattern',
       style : 'height:5px; background-color:' + this.options.color + '; top:' + mouse.y + 'px; left:' + mouse.x + 'px;'
     }).appendTo(this.canvas.parent());
-  },
+  }
 
-  makeDrawingLine : function(e) {
+  makeDrawingLine(e) {
     // To be able to handle touch events
     e.preventDefault();
 
     if (this.startLinePoint) {
       // Getting the pointer position if it was not provided
-      var mouse = this.getPointerPosition(e),
-          params = this.getLengthAngle(this.startLinePoint.x, mouse.x, this.startLinePoint.y, mouse.y);
+      var mouse  = this.getPointerPosition(e);
+      var params = this.getLengthAngle(this.startLinePoint.x, mouse.x, this.startLinePoint.y, mouse.y);
 
       $(this.pattern).css({
-        'width': (params.length + 10) + 'px',
-        'transform': 'rotate(' + params.angle + 'deg)',
+        'width'            : (params.length + 10) + 'px',
+        'transform'        : 'rotate(' + params.angle + 'deg)',
         'transform-origin' : 'center left'
       });
     }
+  }
 
-  },
-
-  stopDrawingLine : function(e) {
+  stopDrawingLine(e) {
     // To be able to handle touch events
     e.preventDefault();
     if(e.relatedTarget && $(e.relatedTarget).attr('id') == 'pattern')
@@ -255,30 +244,30 @@ var Sketch = new Class({
       var mouse = this.getPointerPosition(e);
       this.drawLine([
         {
-          x: this.startLinePoint.x,
-          y: this.startLinePoint.y
+          x : this.startLinePoint.x,
+          y : this.startLinePoint.y
         },
         {
-          x: mouse.x,
-          y: mouse.y
+          x : mouse.x,
+          y : mouse.y
         }
       ]);
     }
     $('#pattern').remove();
     this.startLinePoint = false;
-  },
+  }
 
-  getLengthAngle : function(x1, x2, y1, y2) {
+  getLengthAngle(x1, x2, y1, y2) {
     var xDiff = x2 - x1;
     var yDiff = y2 - y1;
 
     return {
-      length: Math.ceil(Math.sqrt(xDiff * xDiff + yDiff * yDiff)),
-      angle: Math.round((Math.atan2(yDiff, xDiff) * 180) / Math.PI)
+      length : Math.ceil(Math.sqrt(xDiff * xDiff + yDiff * yDiff)),
+      angle  : Math.round((Math.atan2(yDiff, xDiff) * 180) / Math.PI)
     };
-  },
+  }
 
-  makeDrawing: function (e) {
+  makeDrawing(e) {
     if (this.drawing === false || this.disabled === true)
       return this;
 
@@ -298,12 +287,12 @@ var Sketch = new Class({
       this.redrawBuffer();
     }
 
-    this.fireEvent(this.NOTIFY_PAINT_EVENT, [mouse]);
+    this.emit(this.NOTIFY_PAINT_EVENT, [mouse]);
 
     return this;
-  },
+  }
 
-  stopDrawing : function () {
+  stopDrawing() {
     if (this.drawing === false)
       return this;
 
@@ -323,19 +312,19 @@ var Sketch = new Class({
     }
 
     // Triggering the stop event
-    this.fireEvent(this.NOTIFY_STOP_EVENT);
+    this.emit(this.NOTIFY_STOP_EVENT);
 
     return this;
-  },
+  }
 
-  redrawBuffer : function () {
+  redrawBuffer() {
     this.clearOverlay();
     this.drawPoints(this.points, this.overlayContext);
 
     return this;
-  },
+  }
 
-  drawPoints : function (points, context) {
+  drawPoints(points, context) {
     points = points.slice();
     var coordinates = points.shift();
 
@@ -362,9 +351,9 @@ var Sketch = new Class({
       context.restore();
 
     return this;
-  },
+  }
 
-  drawLine : function (pointsArray, skipEvent) {
+  drawLine(pointsArray, skipEvent) {
     skipEvent = skipEvent || false;
 
     // Drawing a line MUST always be done on the master canvas
@@ -377,35 +366,34 @@ var Sketch = new Class({
 
     // This is used mostly by addons or components of addons
     if (!skipEvent)
-      this.fireEvent(this.NOTIFY_LINE_DRAWN, [pointsArray, this.getDrawingOptions()]);
+      this.emit(this.NOTIFY_LINE_DRAWN, [pointsArray, this.getDrawingOptions()]);
 
     return this;
-  },
+  }
 
-  clear : function () {
-
+  clear() {
     $('#pattern').remove();
     this.context.clearRect(0, 0, this.canvas[0].width, this.canvas[0].height);
 
     return this;
-  },
+  }
 
-  changeMode : function(mode) {
+  changeMode(mode) {
     this.options.mode = mode;
     this.attachListeners(true);
-  },
+  }
 
-  clearOverlay : function () {
+  clearOverlay() {
     if (this.overlayContext instanceof CanvasRenderingContext2D)
       this.overlayContext.clearRect(0, 0, this.overlay[0].width, this.overlay[0].height);
 
     return this;
-  },
+  }
 
-  registerAddon : function (addon) {
-
+  registerAddon(addon) {
     this.addons.register(addon);
   }
-});
+
+}
 
 module.exports = Sketch;

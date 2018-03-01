@@ -1,70 +1,53 @@
 "use strict";
 
-/**
- * easy-sketch.js
- *
- * @link https://github.com/brian978/easy-sketch.js
- * @copyright Copyright (c) 2015
- * @license https://github.com/brian978/easy-sketch.js/blob/master/LICENSE New BSD License
-**/
+const deepMixIn  = require('mout/object/deepMixIn');
 
-var Class = require('uclass');
+const Sketch     = require('./Sketch');
 
-/*var Event        = require('./Event');
-var Util         = require('./Util');
-var Addon        = require('./Addon');*/
+class EasySketch extends Sketch {
 
-var EasySketch = new Class({
+  constructor(element, options) {
 
-  Implements : [
-    require('uclass/options'),
-    require('./Sketch')
-  ],
+    super();
 
-  NOTIFY_START_EVENT : 'notify.start',
-  NOTIFY_PAINT_EVENT : 'notify.paint',
-  NOTIFY_STOP_EVENT  : 'notify.stop',
-  NOTIFY_LINE_DRAWN  : 'notify.line.drawn',
+    this.NOTIFY_START_EVENT = 'notify.start';
+    this.NOTIFY_PAINT_EVENT = 'notify.paint';
+    this.NOTIFY_STOP_EVENT  = 'notify.stop';
+    this.NOTIFY_LINE_DRAWN  = 'notify.line.drawn';
 
-  lastMouse : {x : 0, y : 0},
-  disabled : false,
-  binded : false,
-  drawing : false,
-  events : {},
-  eraser : false,
-  overlay : null,
-  overlayContext : null,
-  points : [],
+    this.lastMouse      = {x : 0, y : 0};
+    this.disabled       = false;
+    this.binded         = false;
+    this.drawing        = false;
+    this.events         = {};
+    this.eraser         = false;
+    this.overlay        = null;
+    this.overlayContext = null;
+    this.points         = [];
 
-  /* @type {{color: string, width: number, alpha: number, bindingObject: jQuery, autoBind: boolean}} */
-  options : {
-    color           : "#000000",
-    width           : 5,
-    alpha           : 1,
-    bindingObject   : null,
-    autoBind        : true,
-    mode            : 'pencil'
-  },
-
-  addons : null,
-  canvas : null,
-  context : null,
-
-  initialize : function(element, options) {
-
-    this.listeners = {
-      start: this.startDrawing.bind(this),
-      draw: this.makeDrawing.bind(this),
-      stop: this.stopDrawing.bind(this),
-      startLine : this.startDrawingLine.bind(this),
-      stopLine : this.stopDrawingLine.bind(this),
-      makeLine : this.makeDrawingLine.bind(this)
+    this.options        = {
+      color         : "#000000",
+      width         : 5,
+      alpha         : 1,
+      bindingObject : null,
+      autoBind      : true,
+      mode          : 'pencil'
     };
 
-    // Setting the options
-    if (options) {
-        this.setOptions(options);
-    }
+    this.addons  = null;
+    this.canvas  = null;
+    this.context = null;
+
+    this.listeners = {
+      start     : this.startDrawing.bind(this),
+      draw      : this.makeDrawing.bind(this),
+      stop      : this.stopDrawing.bind(this),
+      startLine : this.startDrawingLine.bind(this),
+      stopLine  : this.stopDrawingLine.bind(this),
+      makeLine  : this.makeDrawingLine.bind(this)
+    };
+
+    deepMixIn(this.options, (options || {}));
 
     this._createCanvas(element);
     this.context = this.canvas.get(0).getContext("2d");
@@ -76,6 +59,6 @@ var EasySketch = new Class({
 
   }
 
-});
+}
 
 module.exports = EasySketch;

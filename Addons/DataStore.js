@@ -1,39 +1,32 @@
 "use strict";
 
-var Class = require('uclass');
+class DataStore {
 
-var DataStore = new Class({
+  constructor(addons) {
 
-  Binds : [
-    'onPaint',
-    'onStopPaint',
-    'onLineDrawn'
-  ],
+    this.onPaint     = this.onPaint.bind(this);
+    this.onStopPaint = this.onStopPaint.bind(this);
+    this.onLineDrawn = this.onLineDrawn.bind(this);
 
-  _lines : [],
-  _stashedLines : [],
-  _currentLine : [],
-  sketch : null,
-  addons : null,
+    this._lines        = [];
+    this._stashedLines = [];
+    this._currentLine  = [];
 
-  initialize : function(addons) {
-
-        
     this.addons = addons;
     this.sketch = this.addons.sketch;
 
-    this.sketch.addEvent(this.sketch.NOTIFY_START_EVENT, this.onPaint);
-    this.sketch.addEvent(this.sketch.NOTIFY_PAINT_EVENT, this.onPaint);
-    this.sketch.addEvent(this.sketch.NOTIFY_STOP_EVENT, this.onStopPaint);
-    this.sketch.addEvent(this.sketch.NOTIFY_LINE_DRAWN, this.onLineDrawn);
-  },
+    this.sketch.on(this.sketch.NOTIFY_START_EVENT, this.onPaint);
+    this.sketch.on(this.sketch.NOTIFY_PAINT_EVENT, this.onPaint);
+    this.sketch.on(this.sketch.NOTIFY_STOP_EVENT, this.onStopPaint);
+    this.sketch.on(this.sketch.NOTIFY_LINE_DRAWN, this.onLineDrawn);
+  }
 
-  onPaint : function (data) {
+  onPaint(data) {
     this._currentLine.push(data[0]);
     return this;
-  },
+  }
 
-  onStopPaint : function () {
+  onStopPaint() {
     this._lines.push({
       points  : this._currentLine,
       options : this.sketch.getDrawingOptions()
@@ -43,36 +36,36 @@ var DataStore = new Class({
     this._stashedLines = [];
 
     return this;
-  },
+  }
 
-  getVisibleLines : function () {
+  getVisibleLines() {
     return this._lines;
-  },
+  }
 
-  onLineDrawn : function (data) {
+  onLineDrawn(data) {
     this._lines.push({
       points  : data[0],
       options : data[1]
     });
 
     return this;
-  },
+  }
 
-  pushLine : function (line) {
+  pushLine(line) {
     this._lines.push(line);
     return this;
-  },
+  }
 
-  undo : function () {
+  undo() {
     if (this._lines.length <= 0)
       return this;
 
     this._stashedLines.push(this._lines.pop());
 
     return this;
-  },
+  }
 
-  redo : function () {
+  redo() {
     if (this._stashedLines.length <= 0)
       return [];
 
@@ -80,14 +73,15 @@ var DataStore = new Class({
     this._lines.push(redoLine);
 
     return redoLine;
-  },
+  }
 
-  reset : function () {
+  reset() {
     this._lines = [];
     this._stashedLines = [];
 
     return this;
   }
-});
+
+}
 
 module.exports = DataStore;
