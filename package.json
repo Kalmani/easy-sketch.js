@@ -1,6 +1,6 @@
 {
   "name": "easy-sketch",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A simple class that facilitates free drawing on the HTML 5 canvas.",
   "main": "index.js",
   "scripts": {
