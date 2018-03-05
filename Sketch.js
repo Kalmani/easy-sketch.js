@@ -21,14 +21,14 @@ class Sketch extends Events {
   }
 
   selectContext() {
-    if (this.options.doubleBuffering === true && this.eraser === false)
+    if(this.options.doubleBuffering === true && this.eraser === false)
       return this.overlayContext;
 
     return this.context;
   }
 
   selectCanvas() {
-    if (this.options.doubleBuffering === true)
+    if(this.options.doubleBuffering === true)
       return this.overlay;
 
     return this.canvas;
@@ -37,7 +37,7 @@ class Sketch extends Events {
   getOption(name, defaultValue) {
     defaultValue = defaultValue || null;
 
-    if (this.options.hasOwnProperty(name))
+    if(this.options.hasOwnProperty(name))
       return this.options[name];
 
     return defaultValue;
@@ -57,19 +57,19 @@ class Sketch extends Events {
 
     switch (elementType) {
       case "string":
-        if (element.indexOf('#') === 0) {
+        if(element.indexOf('#') === 0)
           canvas = $(element);
-        } else if (element.indexOf('.') === -1) {
+        else if(element.indexOf('.') === -1)
           canvas = $("#" + element);
-        }
+
         break;
 
       case "object":
-        if (element instanceof jQuery) {
+        if(element instanceof jQuery)
           canvas = element;
-        } else {
+        else
           canvas = $(element);
-        }
+
         break;
     }
 
@@ -77,20 +77,20 @@ class Sketch extends Events {
   }
 
   attachListeners(force) {
-    if (this.binded === true && !force)
+    if(this.binded === true && !force)
       return this;
 
     this.binded = true;
 
     // Selecting the object to bind on
     var bindingObject;
-    if (this.getOption("bindingObject") !== null) {
+    if(this.getOption("bindingObject") !== null)
       bindingObject = this.options["bindingObject"];
-    } else {
+    else
       bindingObject = this.canvas;
-    }
 
-    if (force === true) {
+
+    if(force === true) {
       bindingObject.off('mousedown touchstart');
       bindingObject.off('mousemove touchmove');
       bindingObject.off('mouseup mouseleave mouseout touchend touchcancel');
@@ -106,25 +106,25 @@ class Sketch extends Events {
       case 'line' :
         bindingObject.on('mousedown touchstart', this.listeners.startLine);
         bindingObject.on('mousemove touchmove', this.listeners.makeLine);
-        bindingObject.on('mouseup mouseleave mouseout touchend touchcancel',this.listeners.stopLine);
+        bindingObject.on('mouseup mouseleave mouseout touchend touchcancel', this.listeners.stopLine);
         break;
     }
     return this;
   }
 
   detachListeners() {
-    if (this.binded === false)
+    if(this.binded === false)
       return this;
 
     this.binded = false;
 
     // Selecting the object to bind on
     var bindingObject;
-    if (this.getOption("bindingObject") !== null) {
+    if(this.getOption("bindingObject") !== null)
       bindingObject = this.options["bindingObject"];
-    } else {
+    else
       bindingObject = this.canvas;
-    }
+
 
     // Canvas listeners
     bindingObject.off('mousedown touchstart', this.listeners.start);
@@ -138,7 +138,7 @@ class Sketch extends Events {
     var $this = this;
     var scale = this.getScale(this.selectCanvas());
 
-    if (e.originalEvent && e.originalEvent.changedTouches && e.originalEvent.changedTouches.length > 0) {
+    if(e.originalEvent && e.originalEvent.changedTouches && e.originalEvent.changedTouches.length > 0) {
       e.pageX = e.originalEvent.changedTouches[0].pageX;
       e.pageY = e.originalEvent.changedTouches[0].pageY;
     }
@@ -179,7 +179,7 @@ class Sketch extends Events {
   }
 
   startDrawing(e) {
-    if (this.drawing === true || this.disabled === true)
+    if(this.drawing === true || this.disabled === true)
       return this;
 
     // To be able to handle touch events
@@ -195,7 +195,7 @@ class Sketch extends Events {
     this.contextSetup();
 
     // Buffering the mouse position
-    if (this.options.doubleBuffering === true && this.eraser === false)
+    if(this.options.doubleBuffering === true && this.eraser === false)
       this.points.push(mouse);
 
     this.emit(this.NOTIFY_START_EVENT, [mouse]);
@@ -220,7 +220,7 @@ class Sketch extends Events {
     // To be able to handle touch events
     e.preventDefault();
 
-    if (this.startLinePoint) {
+    if(this.startLinePoint) {
       // Getting the pointer position if it was not provided
       var mouse  = this.getPointerPosition(e);
       var params = this.getLengthAngle(this.startLinePoint.x, mouse.x, this.startLinePoint.y, mouse.y);
@@ -239,7 +239,7 @@ class Sketch extends Events {
     if(e.relatedTarget && $(e.relatedTarget).attr('id') == 'pattern')
       return;
 
-    if (this.startLinePoint) {
+    if(this.startLinePoint) {
       // Getting the pointer position if it was not provided
       var mouse = this.getPointerPosition(e);
       this.drawLine([
@@ -268,7 +268,7 @@ class Sketch extends Events {
   }
 
   makeDrawing(e) {
-    if (this.drawing === false || this.disabled === true)
+    if(this.drawing === false || this.disabled === true)
       return this;
 
     // To be able to handle touch events
@@ -282,7 +282,7 @@ class Sketch extends Events {
     this.lastMouse = mouse;
 
     // Redrawing the line on the overlay
-    if (this.options.doubleBuffering === true && this.eraser === false) {
+    if(this.options.doubleBuffering === true && this.eraser === false) {
       this.points.push(mouse);
       this.redrawBuffer();
     }
@@ -293,7 +293,7 @@ class Sketch extends Events {
   }
 
   stopDrawing() {
-    if (this.drawing === false)
+    if(this.drawing === false)
       return this;
 
     this.drawing = false;
@@ -305,7 +305,7 @@ class Sketch extends Events {
     this.contextRestore();
 
     // Flushing the buffer
-    if (this.options.doubleBuffering === true && this.eraser === false) {
+    if(this.options.doubleBuffering === true && this.eraser === false) {
       this.drawLine(this.points, true);
       this.points = [];
       this.clearOverlay();
@@ -329,7 +329,7 @@ class Sketch extends Events {
     var coordinates = points.shift();
 
     // Configuring the pen
-    if (this.eraser) {
+    if(this.eraser) {
       // We do a save first to keep the previous globalCompositionOperation
       context.save();
       context.strokeStyle = "rgba(0,0,0,1)";
@@ -339,7 +339,7 @@ class Sketch extends Events {
 
     context.beginPath();
     context.moveTo(coordinates.x, coordinates.y);
-    while (points.length > 0) {
+    while(points.length > 0) {
       coordinates = points.shift();
       context.lineTo(coordinates.x, coordinates.y);
     }
@@ -347,7 +347,7 @@ class Sketch extends Events {
     context.closePath();
 
     // Restoring the globalCompositeOperation
-    if (this.eraser)
+    if(this.eraser)
       context.restore();
 
     return this;
@@ -365,7 +365,7 @@ class Sketch extends Events {
     this.contextRestore(context);
 
     // This is used mostly by addons or components of addons
-    if (!skipEvent)
+    if(!skipEvent)
       this.emit(this.NOTIFY_LINE_DRAWN, [pointsArray, this.getDrawingOptions()]);
 
     return this;
@@ -384,7 +384,7 @@ class Sketch extends Events {
   }
 
   clearOverlay() {
-    if (this.overlayContext instanceof CanvasRenderingContext2D)
+    if(this.overlayContext instanceof CanvasRenderingContext2D)
       this.overlayContext.clearRect(0, 0, this.overlay[0].width, this.overlay[0].height);
 
     return this;

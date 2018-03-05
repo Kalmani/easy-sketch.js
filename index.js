@@ -52,7 +52,7 @@ class EasySketch extends Sketch {
     this._createCanvas(element);
     this.context = this.canvas.get(0).getContext("2d");
 
-    if (this.options.autoBind === true)
+    if(this.options.autoBind === true)
       this.attachListeners();
 
     this._initAddons();

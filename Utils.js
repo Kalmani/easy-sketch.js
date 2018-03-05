@@ -2,20 +2,20 @@
 
 const Utils = {
 
-  getScalePropertyName (object) {
+  getScalePropertyName(object) {
     var property = "";
     var canvasStyle = object[0].style;
 
     // Looking for the non-prefixed property first since it's easier
-    if ("transform" in canvasStyle) {
+    if("transform" in canvasStyle)
       property = "transform";
-    } else {
+    else {
       // Determining the property to use
       var prefixes = ["-moz", "-webkit", "-o", "-ms"];
       var propertyName = "";
-      for (var i = 0; i < prefixes.length; i++) {
+      for(var i = 0; i < prefixes.length; i++) {
         propertyName = prefixes[i] + "-transform";
-        if (propertyName in canvasStyle) {
+        if(propertyName in canvasStyle) {
           property = propertyName;
           break;
         }
@@ -24,16 +24,16 @@ const Utils = {
     return property;
   },
 
-  getScale (object) {
+  getScale(object) {
     var property = this.getScalePropertyName(object);
     var scale    = {
       x : 1,
       y : 1
     };
 
-    if (property !== null) {
+    if(property !== null) {
       var matrix = String(object.css(property));
-      if (matrix != "none") {
+      if(matrix != "none") {
         var regex = new RegExp("([0-9.-]+)", "g");
         var matches = matrix.match(regex);
         scale.x = parseFloat(matches[0]);
@@ -44,22 +44,22 @@ const Utils = {
     return scale;
   },
 
-  extend (parent, child) {
+  extend(parent, child) {
     // Inheriting the methods
-    for (var method in parent.prototype) {
-      if (parent.prototype.hasOwnProperty(method) && typeof parent.prototype[method] === "function") {
+    for(var method in parent.prototype) {
+      if(parent.prototype.hasOwnProperty(method) && typeof parent.prototype[method] === "function") {
         // We must not overwrite the methods in the child if they already exist
-        if(!child.prototype.hasOwnProperty(method)) {
+        if(!child.prototype.hasOwnProperty(method))
           child.prototype[method] = parent.prototype[method];
-        }
+
       }
     }
 
     // Inheriting the properties
-    for (var property in parent) {
-      if (parent.hasOwnProperty(property) && typeof parent.prototype[method] !== "function") {
+    for(var property in parent) {
+      if(parent.hasOwnProperty(property) && typeof parent.prototype[method] !== "function")
         child[property] = parent[property];
-      }
+
     }
   }
 

@@ -57,7 +57,7 @@ class DataStore {
   }
 
   undo() {
-    if (this._lines.length <= 0)
+    if(this._lines.length <= 0)
       return this;
 
     this._stashedLines.push(this._lines.pop());
@@ -66,7 +66,7 @@ class DataStore {
   }
 
   redo() {
-    if (this._stashedLines.length <= 0)
+    if(this._stashedLines.length <= 0)
       return [];
 
     var redoLine = this._stashedLines.pop();

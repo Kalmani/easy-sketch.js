@@ -4,9 +4,7 @@
   "description": "A simple class that facilitates free drawing on the HTML 5 canvas.",
   "main": "index.js",
   "scripts": {
-    "jscs": "jscs --config=node_modules/ivs-jssc/ivs-node.jscsrc index.js Sketch.js Utils.js Addons",
-    "eslint": "eslint --config=node_modules/ivs-jssc/ivs-browser.eslintrc.js index.js Sketch.js Utils.js Addons",
-    "checkall": "npm run jscs && npm run eslint"
+    "eslint": "eslint index.js Sketch.js Utils.js Addons"
   },
   "repository": {
     "type": "git",
@@ -14,6 +12,9 @@
   },
   "dependencies": {
     "mout": "^1.1.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-ivs": "^1.0.5"
   },
   "author": "Kolosowski Florent",
   "license": "ISC",

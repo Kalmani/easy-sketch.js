@@ -12,7 +12,7 @@ class Redo {
       // Moves the last line in the "undo" queue
       var line = this.DataStore.redo();
 
-      if (line.length == 0)
+      if(line.length == 0)
         return;
 
       // Storing the drawing options so we can restore them after the redraw

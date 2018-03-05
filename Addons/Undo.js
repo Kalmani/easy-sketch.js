@@ -19,8 +19,8 @@ class Undo {
 
       // Redrawing the lines
       var lines = this.DataStore.getVisibleLines();
-      for (var idx in lines) {
-        if (lines.hasOwnProperty(idx)) {
+      for(var idx in lines) {
+        if(lines.hasOwnProperty(idx)) {
           this.sketch.setOptions(lines[idx].options);
           this.sketch.drawLine(lines[idx].points, true);
         }
