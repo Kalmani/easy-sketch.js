@@ -12,8 +12,6 @@ class Sketch extends Events {
       this,
       require('./Utils')
     );
-
-    this._autoAdjustOverlay = this._autoAdjustOverlay.bind(this);
   }
 
   _initAddons() {
